@@ -1,16 +1,18 @@
-var URL = 'https://bored-api.appbrewery.com'
+var URL = 'https://bored.api.lewagon.com/api'
 
 async function randomActivity() {
-    let activity_URL = 'https://bored.api.lewagon.com/api/activity'
-    fetch(`${URL}/random`)
+    fetch(`${URL}/activity`)
     .then(response => {
         if (!response.ok) {
             throw new Error(`API responded with ${response.status}`);
         }
         return response.json();
-
     })
     .then(data => {
+        let actitivity_card_element = document.getElementById("activity_card")
+        actitivity_card_element.classList.add("show")
+        actitivity_card_element.classList.remove("hide")
+
         let actitivity_element = document.getElementById("activity_display")
         actitivity_element.innerHTML = data.activity
     })
@@ -20,15 +22,18 @@ async function randomActivity() {
 }
 
 async function boredActivity(activityType) {
-    fetch(`${URL}/filter?type=${activityType}`)
+    fetch(`${URL}/activity?type=${activityType}`)
     .then(response => {
         if (!response.ok) {
             throw new Error(`API responded with ${response.status}`);
         }
         return response.json();
-
     })
     .then(data => {
+        let actitivity_card_element = document.getElementById("activity_card")
+        actitivity_card_element.classList.add("show")
+        actitivity_card_element.classList.remove("hide")
+        
         let actitivity_element = document.getElementById("activity_display")
         actitivity_element.innerHTML = data.activity
     })
