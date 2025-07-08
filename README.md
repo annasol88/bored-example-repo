@@ -152,6 +152,7 @@ Bootstrap provides a library of pre-designed components and styles that we can p
 ```
 Pay attention to the order of your links because this matters for CSS. If you want your stylesheets to take presedence over bootstrap (which we often do because we may choose to override some classes) we need those stylesheets to be listed last.
 
+### Buttons
 Lets have a look at styling some buttons with bootstrap [here](https://getbootstrap.com/docs/5.3/components/buttons/)
 
 As you can see from the documentation, bootstrap exposes a set of classes for different button style variations, so lets see how this work. 
@@ -171,45 +172,167 @@ These classes are written using CSS variables which means they can be customized
 
 So lets obverride these variables with our own branding colours.
 
-- In your styles.css add a class for the primary button and replace your colour varaibles. You will need the !important flag to make sure your overrides take presidence over the default styles:
+- In your styles.css add a class for the primary button and replace your colour varaibles as shown: 
 ```css
 .btn-primary {
-    --bs-btn-color: #fff !important;
-    --bs-btn-bg: #006652 !important;
-    --bs-btn-border-color: #006652 !important;
-    --bs-btn-hover-color: #fff !important;
-    --bs-btn-hover-bg: #003d31 !important;
-    --bs-btn-hover-border-color: #003d31 !important;
-    --bs-btn-active-color: var(--bs-btn-hover-color)!important;
-    --bs-btn-active-bg: #003d31 !important;
-    --bs-btn-active-border-color: #003d31 !important;
+  --bs-btn-color: #fff !important;
+  --bs-btn-bg: #006652 !important;
+  --bs-btn-border-color: #006652 !important;
+  --bs-btn-hover-color: #fff !important;
+  --bs-btn-hover-bg: #003d31 !important;
+  --bs-btn-hover-border-color: #003d31 !important;
+  --bs-btn-active-color: var(--bs-btn-hover-color)!important;
+  --bs-btn-active-bg: #003d31 !important;
+  --bs-btn-active-border-color: #003d31 !important;
+}
+```
+You will need the `!important` flag to make sure your overrides take presidence over the default styles.
+
+You can also pick a different colour if you want! you will just need to find the hex code [here](https://www.everyhex.codes/)
+
+### Positioning
+
+If you remember earlier we wrote some CSS to position our content in the centre of the screen. Well another feature of bootstrap is its grid layout styles which make building neat and responsive really quick and easy.
+
+- Have a read of the 'how they work' section on bootstrap grids [here](https://getbootstrap.com/docs/5.3/layout/grid/).
+
+Now lets apply this to our project.
+
+- First, we want a nice responsive screen so lets add a `container-fluid` class in place of our `main-content`:
+```diff
+...
+-<main class="main-content">
++<main class="container-fluid">
+  <h1>Are You Bored?</h1>
+  <p>Lets solve your bordom. Click the button below for ideas.</p>
+  <button class="btn btn-primary" type="button">I'm Bored</button>
+</main>
+...
+```
+
+We can see thats added a nice bit of padding around our HTML elements.
+
+- Next wrap all our elements in a row class
+```diff
+...
+<main class="container-fluid">
++  <div class="row">
+    <h1>Are You Bored?</h1>
+    <p>Lets solve your bordom. Click the button below for ideas.</p>
+    <button class="btn btn-primary" type="button">I'm Bored</button>
++  </div>
+</main>
+...
+```
+
+This will mess up our styles because we have not actually justified the positioning of the content in our row, so we need to:
+
+- Add the `justify-content-center` class to our row; to centre all block elements such as buttons, divs etc.
+- Add the  `text-center` class to our row also; to centre allm test elements such as p/h1/2/3 etc.
+
+- Lastly we dont want the button to span the whole width of the page so to fix that we can add a col class to it:
+```html
+<button class="col-4 btn btn-primary" type="button">I'm Bored</button>
+```
+
+- We can also make out button really clever and determine its size based on the screen this is called making it 'responsive':
+```html
+<button class="col-sm-4 col-12 btn btn-primary" type="button">I'm Bored</button>
+```
+This will make our button full-width (col-12) by default and 1/3 of the screen for any screen width bigger than small (576px). See [Grid Options](https://getbootstrap.com/docs/5.3/layout/grid/#grid-options).
+
+Our bored app is starting to take shape now.
+
+### Nav Bars
+
+Now lets get more independant, and add a navigation bar using bootstrap.
+
+- Have a look at the bootstrap documentation for its [Navbar component](https://getbootstrap.com/docs/5.3/components/navbar/)
+- Mess about with the different options and classes available and create a navigation bar similar to the one in the bored app, or maybe you can make it even better.
+
+- Try create another html page `activity.html` and toggle between them using the nav bar?
+*Hint: you will need to copy and paste the navbar on both HTML pages.
+
+## Add some functionality - Javascript
+
+Javascript is the foundation for adding any functionality or interactivity to any webpage. So lets see this in practice with some basic show hide functionality!
+
+First we need to create some css classes that will deal with displaying and hiding the information we want on screen.
+
+- In your styles.css create the following 2 classes:
+```css
+.hide {
+    visibility: hidden;
+}
+.show {
+    visibility: visible;
 }
 ```
 
-https://getbootstrap.com/docs/5.3/components/buttons/#variables
+- Next lets create the HTML element that we want to hide:
+```html
+<div class="card text-center mt-2">
+  <div class="card-body">
+    hidden message
+  </div>
+</div>
+```
 
+We are using [bootstrap card styles](https://getbootstrap.com/docs/5.3/components/card/)  as well as a margin at the top (mt-2) to make our hidden content look nice.
 
+Great! Now its time for the Javascript.
 
+- Create a page called script.js
+- Now we need to add a reference to that script in our html like so:
+```diff
+...
++ <script src="script.js"></script>
+</body>
+</html>
+```
+Note: scripts should always go at the bottom of the page because they need to be compiled last.
 
- 
+In Javascript we use ID's to reference elements in our HTML page that we want to manipulate. This means all ID's must be unique.
 
-## Add functionality to our webpage - Javascript
+- Since we want to manipulate our card element lets add an ID to it:
+```html
+<div id="hidden-card" class="card text-center mt-2">
+```
 
-Javascript is the foundation for adding any functionality or interactivity to any webpage. so lets create a basic show hide functionality!
+- Now lets create our javascript function in `script.js`:
+```javascript
+function toggleMessage() {
+  // find the hidden-card element in our document
+  let hidden_element = document.getElementById("hidden-card")
+  // if it is hidden then show it
+  if (hidden_element.classList.contains("hide")) {
+    hidden_element.classList.add("show")
+    hidden_element.classList.remove("hide")
+  // otherwise hide it
+  } else {
+    hidden_element.classList.add("hide")
+    hidden_element.classList.remove("show")
+  }
+}
+```
 
-- show hide functionality
-- lets get creative 
+This function won't currently do anything? why? because we are not invoking it anywhere.
+
+*Think of functions as reusable blocks of code that you need to call into action when you need them.
+
+To trigger our function we are going to use a javascript directive. Directives are event listeners in your website that listen to various types of inputs.
+
+- We are going to use the OnClick directive like so:
+```html
+<button type="button" class="btn btn-primary" onClick="toggleMessage()">I'm Bored</button>
+```
+
+Nice one! youve now got a website that interacts with the user! 
+
+- Now for a challenge, rather than showing and hiding messages do you think you can change the text content of your card when you hover over it. Use [this cheatsheet](https://www.shecodes.io/cheatsheets/javascript/element-manipulation) to help you.
 
 ## Lets add some data - API's
 
 
 
 ## Git Commit
-
-
-## Extension:
-- complete the activities page 
-
-- hookup another API
-- responsiveness
-- font awesome
