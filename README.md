@@ -237,9 +237,9 @@ This will mess up our styles because we have not actually justified the position
 
 - We can also make out button really clever and determine its size based on the screen this is called making it 'responsive':
 ```html
-<button class="col-sm-4 col-12 btn btn-primary" type="button">I'm Bored</button>
+<button class="col-sm-4 col-11 btn btn-primary" type="button">I'm Bored</button>
 ```
-This will make our button full-width (col-12) by default and 1/3 of the screen for any screen width bigger than small (576px). See [Grid Options](https://getbootstrap.com/docs/5.3/layout/grid/#grid-options).
+This will make our button nearly full-width (col-11) by default and 1/3 of the screen for any screen width bigger than small (576px). See [Grid Options](https://getbootstrap.com/docs/5.3/layout/grid/#grid-options).
 
 Our bored app is starting to take shape now.
 
@@ -270,17 +270,21 @@ First we need to create some css classes that will deal with displaying and hidi
 ```
 
 - Next lets create the HTML element that we want to hide:
-```html
-<div class="card text-center mt-2">
-  <div class="card-body">
-    hidden message
-  </div>
+```diff
+...
+  <button class="col-sm-4 col-11 btn btn-primary" type="button">I'm Bored</button>
 </div>
+
++<div class="card text-center">
++  <div class="card-body">
++    hidden message
++  </div>
++</div>
 ```
 
-We are using [bootstrap card styles](https://getbootstrap.com/docs/5.3/components/card/)  as well as a margin at the top (mt-2) to make our hidden content look nice.
+We are using [bootstrap card styles](https://getbootstrap.com/docs/5.3/components/card/) here to make our hidden message look nice but you can use whatever you want.
 
-Great! Now its time for the Javascript.
+Now its time for the Javascript.
 
 - Create a page called script.js
 - Now we need to add a reference to that script in our html like so:
@@ -289,6 +293,7 @@ Great! Now its time for the Javascript.
 + <script src="script.js"></script>
 </body>
 </html>
+...
 ```
 Note: scripts should always go at the bottom of the page because they need to be compiled last.
 
@@ -296,7 +301,7 @@ In Javascript we use ID's to reference elements in our HTML page that we want to
 
 - Since we want to manipulate our card element lets add an ID to it:
 ```html
-<div id="hidden-card" class="card text-center mt-2">
+<div id="hidden-card" class="card text-center">
 ```
 
 - Now lets create our javascript function in `script.js`:
@@ -333,6 +338,47 @@ Nice one! youve now got a website that interacts with the user!
 
 ## Lets add some data - API's
 
+Now for the fun part. Lets power our website with some data, so we can make our hidden message display a random activity idea for when we are bored. 
 
+For this we are going to use the Bored API, [documented here](https://bored.api.lewagon.com/)
+
+An API is an Application Programming Interface, which is basically a program that allows 2 different systems to talk to eachother, for example a web app talking to a data source.
+
+API's communicate using a syntax called JSON which stands for JavaScript Object Notation.
+
+- have a read of [this W3 Schools article](https://www.w3schools.com/js/js_json_syntax.asp) to get familiar with JSON.
+
+so lets see this in practice:
+- Update our toggleMessage function with the following:
+
+```javascript
+async function toggleMessage() {
+    fetch('https://bored.api.lewagon.com/api/activity')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`API responded with ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data)
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+```
+
+So what does this do:
+| Code | Explanation | 
+|---------|--------|
+| `async function toggleMessage()` | `async` marks our function as asynchronous meaning our operation to call an external system is not blocking. Don't worry too much about understanding this but it is necessary to have whenever our program calls something external. |
+| `fetch(...)` | We use the [Javascript fetch function](https://www.geeksforgeeks.org/javascript/javascript-fetch-method/) to GET data from the url provided `https://bored.api.lewagon.com/api/activity` |
+| The first `.then(...)` | We check if the API we called returned a response Ok, if not we throw an error to be caught later otherwise we convert our response to JSON so our program can understand and return it (pass it to the next then) |
+| The next `.then(...)` | logs the response to the console |
+| `.catch(...)` | prints an error to the console if the API responded with an error. |
+
+Lets see if that worked
+- To view the console you will need to right click -> `inspect` -> `console`. Do you see the bored API's response printed there?
 
 ## Git Commit
