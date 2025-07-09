@@ -379,6 +379,49 @@ So what does this do:
 | `.catch(...)` | prints an error to the console if the API responded with an error. |
 
 Lets see if that worked
-- To view the console you will need to right click -> `inspect` -> `console`. Do you see the bored API's response printed there?
+- Check your console by right clicking (on your live serve) -> `inspect` -> `console`. Do you see the bored API's response printed there?
+
+Great! Now lets display it in our hidden message.
+
+- Since we want the content of our card to be populated we will need to add an id to that div:
+```html
+<div id="hidden-message class="card text-center">
+  <div id="hidden-message-content" class="card-body">
+    hidden message
+  </div>
+</div>
+```
+
+- add the following to your toggleMessage() function:
+```diff
+async function toggleMessage() {
+    fetch('https://bored.api.lewagon.com/api/activity')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`API responded with ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
++
++
++
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+``` 
 
 ## Git Commit
+
+Grteat Work! When working with other people, the final step that we need to do once we've finished our code is to commit and push it to our remote repository.
+
+This is important because it means other people working on the project will now be able to see our changes and use the latest version of the code we just added.
+
+Since you'll be doing plenty of this on your hackathon, lets give it a wee practice now.
+
+- on your left hand menu, click into source control:
+![alt text](image.png)
+
+Here you can click through each file to see the changes you have made. Since this is a new project you just started, every file will be new (marked with a U to indicate it was)
